@@ -1,0 +1,51 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Version,
+} from '@nestjs/common';
+import { MenuItemsService } from './menu.items.service';
+import { CreateMenuItemDto } from './dto/create-menu.item.dto';
+import { UpdateMenuItemDto } from './dto/update-menu.item.dto';
+
+@Controller('menu-items')
+export class MenuItemsController {
+  constructor(private readonly menuItemsService: MenuItemsService) {}
+
+  @Version('1')
+  @Post()
+  create(@Body() createMenuItemDto: CreateMenuItemDto) {
+    return this.menuItemsService.create(createMenuItemDto);
+  }
+
+  @Version('1')
+  @Get()
+  findAll() {
+    return this.menuItemsService.findAll();
+  }
+
+  @Version('1')
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.menuItemsService.findOne(+id);
+  }
+
+  @Version('1')
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateMenuItemDto: UpdateMenuItemDto,
+  ) {
+    return this.menuItemsService.update(+id, updateMenuItemDto);
+  }
+
+  @Version('1')
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.menuItemsService.remove(+id);
+  }
+}
