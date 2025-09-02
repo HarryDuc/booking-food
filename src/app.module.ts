@@ -15,10 +15,13 @@ import { MongodbDatabaseModule } from './database/mongodb.module';
 import { AuthModule } from '@/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
+import { MailModule } from './mail-server/mail.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
+    MailModule,
+    MongodbDatabaseModule,
     UsersModule,
     LikesModule,
     MenuItemOptionsModule,
@@ -28,7 +31,6 @@ import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
     OrdersModule,
     RestaurantsModule,
     ReviewsModule,
-    MongodbDatabaseModule,
     AuthModule,
   ],
   controllers: [AppController],
