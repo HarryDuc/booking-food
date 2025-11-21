@@ -15,7 +15,7 @@ import { MongodbDatabaseModule } from './database/mongodb.module';
 import { AuthModule } from '@/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
-import { MailModule } from './mail-server/mail.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [

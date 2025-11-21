@@ -4,6 +4,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailController } from './mail.controller';
 import { MailService } from './mail.service';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -25,17 +26,17 @@ import { MailService } from './mail.service';
           from: '"No Reply" <no-reply@localhost>',
         },
         // preview: true,
-        // template: {
-        //   dir: process.cwd() + '/template/',
-        //   adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
-        //   options: {
-        //     strict: true,
-        //   },
-        // },
+        template: {
+          dir: join(__dirname, 'templates'),
+          adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
+          options: {
+            strict: true,
+          },
+        },
       }),
     }),
   ],
-  exports: [MailerModule],
+  exports: [MailerModule, MailService],
   providers: [MailService],
   controllers: [MailController],
 })

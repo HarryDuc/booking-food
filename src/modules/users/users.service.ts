@@ -9,10 +9,15 @@ import aqp from 'packages/api-query-params/params';
 import { createAuthDto } from '@/auth/dto/create-auth.dto';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
+import { MailService } from '@/mail/mail.service';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) 
+    private userModel: Model<User>,
+    private readonly mailService: MailService,
+) { }
 
   async isEmailTaken(email: string): Promise<boolean> {
     const user = await this.userModel.exists({ email }).exec();
@@ -94,14 +99,18 @@ export class UsersService {
         throw new BadRequestException('Email is already taken');
       }
       const hashedPassword = await hashPasswordUtils(password);
+      const codeId = uuidv4();
       const createdUser = await this.userModel.create({
         name,
         email,
         password: hashedPassword,
         isActive: false,
-        codeId: uuidv4(),
+        codeId: codeId,
         codeExpired: dayjs().add(1, 'minutes').toDate(),
       });
+
+      await this.mailService.sendEmail(email, name ?? email, createdUser.codeId);
+
       return createdUser;
     } catch (error) {
       throw error;
